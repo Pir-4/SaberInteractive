@@ -12,11 +12,13 @@ namespace SaberInteractive
         private ListNode Head;
         private ListNode Tail;
 
+        private readonly Serializer _serializer = new Serializer();
+
         public int Count { get; private set; }
 
         public ListNode Add(string data, ListNode randNode = null)
         {
-            var newNode = new ListNode() { Data = data, Rand = randNode};
+            var newNode = new ListNode() { Data = data, Rand = randNode };
             Count++;
 
             if (Head == null)
@@ -53,12 +55,12 @@ namespace SaberInteractive
 
         public void Serialize(FileStream s)
         {
-            throw new NotImplementedException();
+            _serializer.Serialize(s, Head);
         }
 
         public void Deserialize(FileStream s)
         {
-            throw new NotImplementedException();
+            Head = _serializer.Deserialize(s);
         }
     }
 }

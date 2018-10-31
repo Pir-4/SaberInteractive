@@ -5,12 +5,12 @@ namespace SaberInteractive
 {
     public class Serializer
     {
-        public void Serialize(FileStream s)
+        public void Serialize(FileStream s, ListNode startNode)
         {
             throw new NotImplementedException();
         }
 
-        public void Deserialize(FileStream s)
+        public ListNode Deserialize(FileStream s)
         {
             throw new NotImplementedException();
         }
