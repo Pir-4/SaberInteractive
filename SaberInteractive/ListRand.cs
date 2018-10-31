@@ -14,29 +14,29 @@ namespace SaberInteractive
 
         public int Count { get; private set; }
 
-        public void Add(string data)
+        public ListNode Add(string data, ListNode randNode = null)
         {
-            var newNode = new ListNode() { Data = data };
+            var newNode = new ListNode() { Data = data, Rand = randNode};
             Count++;
 
             if (Head == null)
             {
                 Head = newNode;
                 Tail = newNode;
-                return;
             }
-
-            if (Head == Tail)
+            else if (Head == Tail)
             {
                 Head.Next = newNode;
                 newNode.Perv = Head;
                 Tail = newNode;
-                return;
             }
-
-            newNode.Perv = Tail;
-            Tail.Next = newNode;
-            Tail = newNode;
+            else
+            {
+                newNode.Perv = Tail;
+                Tail.Next = newNode;
+                Tail = newNode;
+            }
+            return newNode;
         }
 
         public List<string> ToList(bool isReverse = false)
