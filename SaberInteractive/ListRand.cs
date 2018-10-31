@@ -22,20 +22,18 @@ namespace SaberInteractive
             if (Head == null)
             {
                 Head = newNode;
-                Tail = newNode;
             }
             else if (Head == Tail)
             {
                 Head.Next = newNode;
                 newNode.Perv = Head;
-                Tail = newNode;
             }
             else
             {
                 newNode.Perv = Tail;
                 Tail.Next = newNode;
-                Tail = newNode;
             }
+            Tail = newNode;
             return newNode;
         }
 

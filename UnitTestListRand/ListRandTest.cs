@@ -49,10 +49,12 @@ namespace UnitTestListRand
             {
                 _listRand.Add(data);
             }
+
             if (isReverse)
             {
                 datas.Reverse();
             }
+
             var listString = _listRand.ToList(isReverse);
             
             Assert.IsTrue(listString.Count.Equals(datas.Count),
