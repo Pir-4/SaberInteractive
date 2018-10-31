@@ -17,11 +17,12 @@ namespace SaberInteractive
         public void Add(string data)
         {
             var newNode = new ListNode() { Data = data };
+            Count++;
+
             if (Head == null)
             {
                 Head = newNode;
                 Tail = newNode;
-                Count++;
                 return;
             }
 
@@ -30,7 +31,6 @@ namespace SaberInteractive
                 Head.Next = newNode;
                 newNode.Perv = Head;
                 Tail = newNode;
-                Count++;
                 return;
             }
 
