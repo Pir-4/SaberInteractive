@@ -31,10 +31,13 @@ namespace UnitTestListRand
                 $"Counts not equals. ListRand {_listRand.Count}, expected {datas.Count()}");
         }
 
-        [TestCase(5)]
-        [TestCase(0)]
-        [TestCase(100)]
-        public void EqualsItems(int count)
+        [TestCase(5, false)]
+        [TestCase(0,false)]
+        [TestCase(100, false)]
+        [TestCase(5, true)]
+        [TestCase(0, true)]
+        [TestCase(100, true)]
+        public void EqualsItems(int count, bool isReverse)
         {
             _listRand = new ListRand();
             Assert.IsFalse(_listRand.ToList().Any(),
@@ -46,8 +49,11 @@ namespace UnitTestListRand
             {
                 _listRand.Add(data);
             }
-
-            var listString = _listRand.ToList();
+            if (isReverse)
+            {
+                datas.Reverse();
+            }
+            var listString = _listRand.ToList(isReverse);
             
             Assert.IsTrue(listString.Count.Equals(datas.Count),
                 $"Counts not equals. ListRand {_listRand.Count}, expected count {datas.Count}");
