@@ -42,28 +42,14 @@ namespace SaberInteractive
         public List<string> ToList(bool isReverse = false)
         {
             var result = new List<string>();
-
-            var current = isReverse ? Tail : Head;
-            while (current != null)
-            {
-                result.Add(current.Data);
-                current = isReverse ? current.Perv : current.Next;
-            }
-
+            Foreach(current => result.Add(current.Data), isReverse);
             return result;
         }
 
         public List<ListNode> ToListNodes(bool isReverse = false)
         {
             var result = new List<ListNode>();
-
-            var current = isReverse ? Tail : Head;
-            while (current != null)
-            {
-                result.Add(current);
-                current = isReverse ? current.Perv : current.Next;
-            }
-
+            Foreach(current => result.Add(current), isReverse);
             return result;
         }
 
@@ -75,6 +61,16 @@ namespace SaberInteractive
         public void Deserialize(FileStream s)
         {
             Head = _serializer.Deserialize(s);
+        }
+
+        private void Foreach(Action<ListNode> actionCurrentItem, bool isReverse = false)
+        {
+            var current = isReverse ? Tail : Head;
+            while (current != null)
+            {
+                actionCurrentItem.Invoke(current);
+                current = isReverse ? current.Perv : current.Next;
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
+
 
 namespace SaberInteractive
 {
@@ -11,9 +14,17 @@ namespace SaberInteractive
             (name, value) => string.IsNullOrEmpty(value) ? string.Empty :
                 $"{name}:{value}";
 
-        public void Serialize(FileStream s, ListNode startNode)
+        private Dictionary<ListNode, string> _nodeDictionary;
+
+        public void Serialize(FileStream s, ListNode head)
         {
-            throw new NotImplementedException();
+            var buffer = new StringBuilder();
+            _nodeDictionary = new Dictionary<ListNode, string>();
+            var current = head;
+            while (current != null)
+            {
+                
+            }
         }
 
         public ListNode Deserialize(FileStream s)
