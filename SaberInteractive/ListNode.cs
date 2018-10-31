@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace SaberInteractive
 {
-    public class Class1
+    public class ListNode
     {
+        public ListNode Perv;
+        public ListNode Next;
+        public ListNode Rand;
+        public string Data;
     }
 }
