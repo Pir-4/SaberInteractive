@@ -53,6 +53,20 @@ namespace SaberInteractive
             return result;
         }
 
+        public List<ListNode> ToListNodes(bool isReverse = false)
+        {
+            var result = new List<ListNode>();
+
+            var current = isReverse ? Tail : Head;
+            while (current != null)
+            {
+                result.Add(current);
+                current = isReverse ? current.Perv : current.Next;
+            }
+
+            return result;
+        }
+
         public void Serialize(FileStream s)
         {
             _serializer.Serialize(s, Head);
