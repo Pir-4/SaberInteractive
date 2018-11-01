@@ -7,9 +7,9 @@ using SaberInteractive;
 namespace UnitTestListRand
 {
     [TestFixture]
-    public class ListRandTest
+    public class ListRandTests
     {
-        private ListRand _listRand;
+        protected ListRand _listRand;
 
 
         [TestCase(5)]
@@ -58,20 +58,7 @@ namespace UnitTestListRand
             }
         }
 
-        [Test]
-        public void CheckMethodEqualsListNodeTest()
-        {
-            InitDatasAndListRand(2);
-            var listNode = _listRand.ToListNodes();
-
-            Assert.IsFalse(listNode[0].Equals(null),"ListNode equals 'null'");
-            Assert.IsFalse(listNode[0].Equals(string.Empty), "ListNode equals 'string empty'");
-
-            Assert.IsTrue(listNode[0].Equals(listNode[0]), "ListNode not equals itself");
-            Assert.IsFalse(listNode[0].Equals(listNode[1]), "ListNode not equals itself");
-        }
-
-        private List<string> InitDatasAndListRand(int count)
+        protected List<string> InitDatasAndListRand(int count)
         {
             _listRand = _listRand ?? new ListRand();
             var datas = Enumerable.Range(0, count).Select(_ => Guid.NewGuid().ToString()).ToList();
