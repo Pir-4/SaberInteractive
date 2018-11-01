@@ -17,7 +17,7 @@ namespace SaberInteractive
         {
             var inputNode = obj as ListNode;
 
-            return (inputNode != null) && 
+            return (inputNode != null) &&
                 (ReferenceEquals(this, obj) ||
                  (this.Data.Equals(inputNode.Data) &&
                  ReferenceEquals(this.Perv, inputNode.Perv) && ReferenceEquals(this.Next, inputNode.Next) &&
@@ -26,7 +26,7 @@ namespace SaberInteractive
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return Data.GetHashCode() ^ new { this.Perv, this.Next, this.Rand }.GetHashCode();
         }
     }
 }
