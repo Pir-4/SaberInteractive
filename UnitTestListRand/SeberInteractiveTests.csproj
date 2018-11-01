@@ -57,6 +57,7 @@
     <Compile Include="ListNodeTests.cs" />
     <Compile Include="ListRandTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

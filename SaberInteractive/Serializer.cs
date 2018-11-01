@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -14,21 +15,37 @@ namespace SaberInteractive
 
         private static readonly Func<string, string, string> _packagingProperty =
             (name, value) => string.IsNullOrEmpty(value) ? string.Empty :
-                $"{name}:{value}";
+                $"{name}:{value}|";
 
-        public static void Serialize(FileStream s, ListNode head)
+        public static void Serialize(FileStream fileStream, ListNode head)
         {
             var buffer = new StringBuilder();
             var current = head;
-            while (current != null)
+            using (StreamWriter writer = new StreamWriter(fileStream))
             {
-                var currentBuffer = new StringBuilder();
-                foreach (PropertyInfo propertyInfo in current.GetType().GetProperties())
+                while (current != null)
                 {
-                    var guid = GetNodeId(propertyInfo.GetValue(propertyInfo) as ListNode);
-                    currentBuffer.Append(_packagingProperty(propertyInfo.Name, guid));
+                    var currentBuffer = new StringBuilder();
+                    foreach (var fieldInfo in current.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+                    {
+                        var fieldvalue = fieldInfo.GetValue(current);
+                        if (fieldvalue == null || fieldvalue is Guid)
+                            continue;
+
+                        var data = String.Empty;
+                        if (fieldvalue is ListNode)
+                            data = GetNodeId(fieldvalue as ListNode);
+                        else
+                        {
+                            data = fieldvalue.ToString();
+                        }
+
+                        currentBuffer.Append(_packagingProperty(fieldInfo.Name, data));
+                    }
+                    buffer.Append(_packagingItem(currentBuffer.ToString()));
+                    current = current.Next;
                 }
-                buffer.Append(_packagingItem(currentBuffer.ToString()));
+                writer.Write(buffer.ToString());
             }
         }
 

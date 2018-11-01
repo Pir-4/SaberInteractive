@@ -9,10 +9,8 @@ namespace SaberInteractive
 {
     public class ListRand
     {
-        private ListNode Head;
+        public ListNode Head;
         private ListNode Tail;
-
-        private readonly Serializer _serializer = new Serializer();
 
         public int Count { get; private set; }
 
@@ -55,12 +53,12 @@ namespace SaberInteractive
 
         public void Serialize(FileStream s)
         {
-            _serializer.Serialize(s, Head);
+            Serializer.Serialize(s, Head);
         }
 
         public void Deserialize(FileStream s)
         {
-            Head = _serializer.Deserialize(s);
+            Head = Serializer.Deserialize(s);
         }
 
         private void Foreach(Action<ListNode> actionCurrentItem, bool isReverse = false)
