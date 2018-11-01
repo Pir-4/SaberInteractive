@@ -8,10 +8,16 @@ namespace SaberInteractive
 {
     public class ListNode
     {
+        public readonly Guid Guid = Guid.NewGuid();
         public ListNode Perv;
         public ListNode Next;
         public ListNode Rand;
         public string Data;
+
+        public ListNode(string data)
+        {
+            Data = data;
+        }
 
         public override bool Equals(object obj)
         {
@@ -26,7 +32,18 @@ namespace SaberInteractive
 
         public override int GetHashCode()
         {
-            return Data.GetHashCode() ^ new { this.Perv, this.Next, this.Rand }.GetHashCode();
+            var hash = Data.GetHashCode();
+
+            if (Perv != null)
+                hash = hash ^ Perv.Guid.GetHashCode();
+
+            if (Next != null)
+                hash = hash ^ Next.Guid.GetHashCode();
+
+            if (Rand != null)
+                hash = hash ^ Rand.Guid.GetHashCode();
+
+            return hash;
         }
     }
 }

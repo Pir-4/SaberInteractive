@@ -18,7 +18,7 @@ namespace SaberInteractive
 
         public ListNode Add(string data, ListNode randNode = null)
         {
-            var newNode = new ListNode() { Data = data, Rand = randNode };
+            var newNode = new ListNode(data) { Rand = randNode };
             Count++;
 
             if (Head == null)
