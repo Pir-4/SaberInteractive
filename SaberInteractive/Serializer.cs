@@ -14,7 +14,7 @@ namespace SaberInteractive
     {
         private const string ItemOpen = "[";
         private const string ItemClose = "]";
-        private static string ItemRegexPattern = $@"\{ItemOpen}(.*?)\{ItemClose}";
+        private static string ItemRegexPattern = @"(^|[\W])\[(.*?)\]($|(?!( |\w)))";//@"(\W?)\[(.*?)\](\W|$)";// $@"\{ItemOpen}(.*?)\{ItemClose}";
 
         private const string FieldOpen = "{";
         private const string FieldClose = "}";
@@ -69,7 +69,7 @@ namespace SaberInteractive
             {
                 foreach (Match elementMatch in Regex.Matches(reader.ReadToEnd(), ItemRegexPattern))
                 {
-                    var elementString = elementMatch.Groups[1].Value;
+                    var elementString = elementMatch.Groups[2].Value;
                     var elementDictionary = new Dictionary<string, string>();
 
                     foreach (Match fieldMatch in Regex.Matches(elementString, FieldRegexPattern))
