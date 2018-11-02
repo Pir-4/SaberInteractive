@@ -134,6 +134,8 @@ namespace SaberInteractive
                     throw new ArgumentException($"Input list has more one tails. Has {tailsCount}");
                 }
             }
+
+            Count = inputList.Count;
         }
 
         private bool EqualsListRand(ListRand inputListRand)
