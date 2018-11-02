@@ -19,7 +19,7 @@ namespace UnitTestListRand
         }
 
         [Test]
-        public void CheckMethodEqualsListNodeTest()
+        public void ListNodeTest01Equals()
         {
             InitDatasAndListRand(2);
             var listNodes = _listRand.ToListNode();
@@ -32,7 +32,7 @@ namespace UnitTestListRand
         }
 
         [Test]
-        public void CheckMethodGetHashCodeListNodeTest()
+        public void ListNodeTest02GetHashCode()
         {
             var listNode = new ListNode("test");
             var hashString = listNode.GetHashCode();
