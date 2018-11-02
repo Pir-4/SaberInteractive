@@ -23,6 +23,8 @@ namespace SaberInteractive
         private const string DataSplitter = ":";
         private static string DataRegexPattern = $"(.*){DataSplitter}(.*)";
 
+        private static Dictionary<Type, IEnumerable<FieldInfo>> Cache = new Dictionary<Type, IEnumerable<FieldInfo>>();
+
 
         private static Dictionary<ListNode, string> _nodeDictionary;
         private static readonly Func<string, string> _packagingItem = item => $"{ItemOpen}" +$"{item}" + $"{ItemClose}\n";
@@ -39,20 +41,17 @@ namespace SaberInteractive
                 while (current != null)
                 {
                     var currentBuffer = new List<string>();
-                    foreach (var fieldInfo in current.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+                    foreach (var fieldInfo in FieldInfo(current))
                     {
                         var fieldValue = fieldInfo.GetValue(current);
                         if (fieldValue == null)
                             continue;
 
-                        var data = string.Empty;
+                        var data = fieldValue.ToString();
                         if (fieldValue is ListNode)
                             data = (fieldValue as ListNode).Guid.ToString();
-                        else
-                        {
-                            data = fieldValue.ToString();
-                        }
 
+                        data = data.Replace("[", @"\[").Replace("]", @"\]");
                         currentBuffer.Add(_packagingProperty(fieldInfo.Name, data));
                     }
                     buffer.Append(_packagingItem(string.Join(" ", currentBuffer)));
@@ -110,6 +109,17 @@ namespace SaberInteractive
                 result.Add(currentItem);
             }
             return result;
+        }
+
+        private static FieldInfo[] FieldInfo(object obj)
+        {
+            var type = obj.GetType();
+            if (!Cache.ContainsKey(type))
+            {
+                Cache[type] = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            }
+
+            return Cache[type].ToArray();
         }
     }
 }
