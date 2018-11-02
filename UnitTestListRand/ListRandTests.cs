@@ -7,9 +7,8 @@ using SaberInteractive;
 namespace UnitTestListRand
 {
     [TestFixture]
-    public class ListRandTests
+    public class ListRandTests : TestBase
     {
-        protected ListRand _listRand;
 
         [SetUp]
         public void Init()
@@ -87,28 +86,6 @@ namespace UnitTestListRand
                 var node = _listRand.GetNode(i, isReverse);
                 Assert.IsTrue(node.Data.Equals(datas[i]),
                     $"Items not equals. Actual '{node.Data}', expected {datas[i]}");
-            }
-        }
-
-        protected List<string> InitDatasAndListRand(int count)
-        {
-            _listRand = _listRand ?? new ListRand();
-            var datas = Enumerable.Range(0, count).Select(_ => Guid.NewGuid().ToString()).ToList();
-
-            foreach (var data in datas)
-            {
-                _listRand.Add(data);
-            }
-            return datas;
-        }
-
-        protected void InitListNodeRandomItem(bool isReverse = false)
-        {
-            var rand = new Random(_listRand.GetHashCode());
-
-            foreach (var node in _listRand.ToListNode())
-            {
-                node.Rand = _listRand.GetNode(rand.Next(0, _listRand.Count), isReverse);
             }
         }
     }

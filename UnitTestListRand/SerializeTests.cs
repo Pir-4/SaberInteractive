@@ -11,11 +11,16 @@ using SaberInteractive;
 namespace UnitTestListRand
 {
     [TestFixture()]
-    public class SerializeTests : ListRandTests
+    public class SerializeTests : TestBase
     {
         private const string TestFolderPath = @"E:\Git\My\SaberInteractive\TestFiles";
         private readonly string _serializeFile = Path.Combine(TestFolderPath, "serialize.txt");
-        private readonly string _deserializeFile = Path.Combine(TestFolderPath, "deserialize.txt");
+
+        [SetUp]
+        public void Init()
+        {
+            _listRand = new ListRand();
+        }
 
         [TestCase(5)]
         [TestCase(0)]

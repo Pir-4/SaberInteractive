@@ -10,8 +10,14 @@ using SaberInteractive;
 namespace UnitTestListRand
 {
     [TestFixture()]
-    public class ListNodeTests : ListRandTests
+    public class ListNodeTests : TestBase
     {
+        [SetUp]
+        public void Init()
+        {
+            _listRand = new ListRand();
+        }
+
         [Test]
         public void CheckMethodEqualsListNodeTest()
         {
