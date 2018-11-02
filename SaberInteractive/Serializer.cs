@@ -32,9 +32,9 @@ namespace SaberInteractive
                         if (fieldValue == null)
                             continue;
 
-                        var data = String.Empty;
+                        var data = string.Empty;
                         if (fieldValue is ListNode)
-                            data = GetNodeId(fieldValue as ListNode);
+                            data = (fieldValue as ListNode).Guid.ToString();
                         else
                         {
                             data = fieldValue.ToString();
@@ -52,16 +52,6 @@ namespace SaberInteractive
         public static ListNode Deserialize(FileStream s)
         {
             throw new NotImplementedException();
-        }
-
-        private static string GetNodeId(ListNode node)
-        {
-            _nodeDictionary = _nodeDictionary ?? new Dictionary<ListNode, string>();
-            if (!_nodeDictionary.ContainsKey(node))
-            {
-                _nodeDictionary[node] = node.Guid.ToString();
-            }
-            return _nodeDictionary[node];
         }
     }
 }
