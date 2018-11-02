@@ -11,13 +11,17 @@ namespace UnitTestListRand
     {
         protected ListRand _listRand;
 
+        [SetUp]
+        public void Init()
+        {
+            _listRand = new ListRand();
+        }
 
         [TestCase(5)]
         [TestCase(0)]
         [TestCase(100)]
         public void AddItemsAndCheckCountTest(int count)
         {
-            _listRand = new ListRand();
             Assert.IsTrue(_listRand.Count.Equals(0),
                 $"ListRand isn't empty");
 
@@ -35,8 +39,7 @@ namespace UnitTestListRand
         [TestCase(100, true)]
         public void EqualsItemsTest(int count, bool isReverse)
         {
-            _listRand = new ListRand();
-            Assert.IsFalse(_listRand.ToList().Any(),
+            Assert.IsFalse(_listRand.ToListString().Any(),
                 $"ListRand isn't empty");
 
             var datas = InitDatasAndListRand(count);
@@ -46,7 +49,7 @@ namespace UnitTestListRand
                 datas.Reverse();
             }
 
-            var listString = _listRand.ToList(isReverse);
+            var listString = _listRand.ToListString(isReverse);
             
             Assert.IsTrue(listString.Count.Equals(datas.Count),
                 $"Counts not equals. ListRand {_listRand.Count}, expected count {datas.Count}");

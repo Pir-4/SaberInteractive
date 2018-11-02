@@ -16,7 +16,7 @@ namespace UnitTestListRand
         public void CheckMethodEqualsListNodeTest()
         {
             InitDatasAndListRand(2);
-            var listNodes = _listRand.ToListNodes();
+            var listNodes = _listRand.ToListNode();
 
             Assert.IsFalse(listNodes[0].Equals(null), "ListNode equals 'null'");
             Assert.IsFalse(listNodes[0].Equals(string.Empty), "ListNode equals 'string empty'");
@@ -46,7 +46,7 @@ namespace UnitTestListRand
 
 
             InitDatasAndListRand(3);
-            var listNodes = _listRand.ToListNodes();
+            var listNodes = _listRand.ToListNode();
 
             for (int i = 0; i < listNodes.Count; i++)
             {

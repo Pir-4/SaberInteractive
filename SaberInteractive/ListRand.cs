@@ -37,14 +37,14 @@ namespace SaberInteractive
             return newNode;
         }
 
-        public List<string> ToList(bool isReverse = false)
+        public List<string> ToListString(bool isReverse = false)
         {
             var result = new List<string>();
             Foreach(current => result.Add(current.Data), isReverse);
             return result;
         }
 
-        public List<ListNode> ToListNodes(bool isReverse = false)
+        public List<ListNode> ToListNode(bool isReverse = false)
         {
             var result = new List<ListNode>();
             Foreach(current => result.Add(current), isReverse);
