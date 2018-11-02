@@ -28,7 +28,7 @@ namespace UnitTestListRand
             Assert.IsFalse(listNodes[0].Equals(string.Empty), "ListNode equals 'string empty'");
 
             Assert.IsTrue(listNodes[0].Equals(listNodes[0]), "ListNode not equals itself");
-            Assert.IsFalse(listNodes[0].Equals(listNodes[1]), "ListNode not equals itself");
+            Assert.IsFalse(listNodes[0].Equals(listNodes[1]), "ListNode equals different element");
         }
 
         [Test]
