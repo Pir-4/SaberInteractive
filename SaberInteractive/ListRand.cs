@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,30 +17,35 @@ namespace SaberInteractive
 
         public ListNode Add(string data, ListNode randNode = null)
         {
-            var newNode = new ListNode(data) { Rand = randNode };
+            return Add(new ListNode(data) {Rand = randNode});
+        }
+
+        public ListNode Add(ListNode node)
+        {
             Count++;
 
             if (Head == null)
             {
-                Head = newNode;
+                Head = node;
             }
             else if (Head == Tail)
             {
-                Head.Next = newNode;
-                newNode.Perv = Head;
+                Head.Next = node;
+                node.Perv = Head;
             }
             else
             {
-                newNode.Perv = Tail;
-                Tail.Next = newNode;
+                node.Perv = Tail;
+                Tail.Next = node;
             }
-            Tail = newNode;
-            return newNode;
+            Tail = node;
+            return node;
         }
+
 
         public ListNode GetNode(int index, bool isReverse = false)
         {
-            if (index < 0 || index >= Count)
+            if (index < 0 || index > Count)
             {
                 throw new ArgumentException($"Input index not correct. Index from 0 to {Count-1}");
             }
