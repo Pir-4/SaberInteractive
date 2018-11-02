@@ -51,7 +51,7 @@ namespace SaberInteractive
                         if (fieldValue is ListNode)
                             data = (fieldValue as ListNode).Guid.ToString();
 
-                        data = data.Replace("[", @"\[").Replace("]", @"\]");
+                        data = data;//.Replace("[", @"\[").Replace("]", @"\]");
                         currentBuffer.Add(_packagingProperty(fieldInfo.Name, data));
                     }
                     buffer.Append(_packagingItem(string.Join(" ", currentBuffer)));
