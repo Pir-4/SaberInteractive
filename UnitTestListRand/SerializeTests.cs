@@ -77,6 +77,7 @@ namespace UnitTestListRand
         [TestCase("")]
         [TestCase("test[test]test")]
         [TestCase("test [ test ] test")]
+        [TestCase("test [[ test ]] test")]
         [TestCase("test{test}test")]
         [TestCase("test { test } test")]
         [TestCase("test:test:test")]
