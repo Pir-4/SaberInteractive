@@ -28,16 +28,16 @@ namespace SaberInteractive
                     var currentBuffer = new List<string>();
                     foreach (var fieldInfo in current.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
                     {
-                        var fieldvalue = fieldInfo.GetValue(current);
-                        if (fieldvalue == null || fieldvalue is Guid)
+                        var fieldValue = fieldInfo.GetValue(current);
+                        if (fieldValue == null)
                             continue;
 
                         var data = String.Empty;
-                        if (fieldvalue is ListNode)
-                            data = GetNodeId(fieldvalue as ListNode);
+                        if (fieldValue is ListNode)
+                            data = GetNodeId(fieldValue as ListNode);
                         else
                         {
-                            data = fieldvalue.ToString();
+                            data = fieldValue.ToString();
                         }
 
                         currentBuffer.Add(_packagingProperty(fieldInfo.Name, data));

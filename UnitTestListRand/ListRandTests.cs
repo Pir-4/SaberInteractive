@@ -101,5 +101,15 @@ namespace UnitTestListRand
             }
             return datas;
         }
+
+        protected void InitListNodeRandomItem(bool isReverse = false)
+        {
+            var rand = new Random(_listRand.GetHashCode());
+
+            foreach (var node in _listRand.ToListNode())
+            {
+                node.Rand = _listRand.GetNode(rand.Next(0, _listRand.Count), isReverse);
+            }
+        }
     }
 }

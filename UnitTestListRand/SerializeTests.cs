@@ -20,27 +20,54 @@ namespace UnitTestListRand
         [TestCase(5)]
         [TestCase(0)]
         [TestCase(100)]
-        public void SerializeCountTest(int count)
+        public void SerializeTest01ContainsDataInLine(int count)
         {
-            var datas = InitDatasAndListRand(count);
-
-            if(File.Exists(_serializeFile))
-                File.Delete(_serializeFile);
-
-            using (var fileStream = new FileStream(_serializeFile,FileMode.OpenOrCreate,FileAccess.Write))
-            {
-                Serializer.Serialize(fileStream, _listRand.Head);
-            }
+            Serialize(_serializeFile, count);
 
             using (var reader = new StreamReader(_serializeFile))
             {
-                foreach (var data in datas)
+                if (_listRand.IsEmpty)
                 {
-                    var actualValue = reader.ReadLine();
-                    Assert.IsTrue(actualValue.Contains(data), 
-                        $"Serialize string not contains expected data." +
-                        $"Actual '{actualValue}', expected {data}");
+                    Assert.IsTrue(reader.EndOfStream, "File not empty");
                 }
+                else
+                {
+                    foreach (var node in _listRand.ToListNode())
+                    {
+                        var actualValue = reader.ReadLine();
+                        Assert.IsTrue(actualValue.Contains(node.Data),
+                            $"Serialize string 'Data' not contains expected data." +
+                            $"Actual '{actualValue}', expected {node.Data}");
+
+                        ActualValueContains(actualValue, node.Perv, "Perv.Guid");
+                        ActualValueContains(actualValue, node.Next, "Next.Guid");
+                        ActualValueContains(actualValue, node.Rand, "Rand.Guid");
+                    }
+                }
+            }
+        }
+
+        private void Serialize(string serializeFile, int count)
+        {
+            InitDatasAndListRand(count);
+            InitListNodeRandomItem();
+
+            if (File.Exists(_serializeFile))
+                File.Delete(_serializeFile);
+
+            using (var fileStream = new FileStream(serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                Serializer.Serialize(fileStream, _listRand.Head);
+            }
+        }
+
+        private static void ActualValueContains(string actualValue, ListNode node, string fieldName)
+        {
+            if (node != null)
+            {
+                Assert.IsTrue(actualValue.Contains(node.Guid.ToString()),
+                    $"Serialize string '{fieldName}' not contains expected data." +
+                    $"Actual '{actualValue}', expected '{node.Guid}'");
             }
         }
     }
