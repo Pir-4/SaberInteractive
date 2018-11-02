@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -31,7 +32,7 @@ namespace UnitTestListRand
         }
 
         [TestCase(5, false)]
-        [TestCase(0,false)]
+        [TestCase(0, false)]
         [TestCase(100, false)]
         [TestCase(5, true)]
         [TestCase(0, true)]
@@ -49,7 +50,7 @@ namespace UnitTestListRand
             }
 
             var listString = _listRand.ToListString(isReverse);
-            
+
             Assert.IsTrue(listString.Count.Equals(datas.Count),
                 $"Counts not equals. ListRand {listString.Count}, expected count {datas.Count}");
 
@@ -87,6 +88,59 @@ namespace UnitTestListRand
                 Assert.IsTrue(node.Data.Equals(datas[i]),
                     $"Items not equals. Actual '{node.Data}', expected {datas[i]}");
             }
+        }
+
+        [Test]
+        public void ListRandTest04GetNodeConfines()
+        {
+            InitDatasAndListRand(3);
+            Assert.IsTrue(_listRand.GetNode(_listRand.Count) == null, $"List return item with numbers equals count {_listRand.Count}");
+
+            try
+            {
+                _listRand.GetNode(-1);
+                Assert.IsTrue(false, "List not return exception");
+            }
+            catch (ArgumentException)
+            {
+                Assert.IsTrue(true);
+            }
+        }
+
+        [TestCase(5)]
+        [TestCase(0)]
+        [TestCase(100)]
+        public void ListRandTest05Equals(int count)
+        {
+            InitDatasAndListRand(count);
+
+            Assert.IsFalse(_listRand.Equals(null), "ListRand equals 'null'");
+            Assert.IsFalse(_listRand.Equals(new DateTime()), "ListRand equals 'date time'");
+
+            Assert.IsTrue(_listRand.Equals(_listRand), "ListRand not equals itself");
+
+            if (count > 0)
+            {
+                var likeCountListRand = new ListRand();
+                for (int i = 0; i < _listRand.Count; i++)
+                {
+                    likeCountListRand.Add(Guid.NewGuid().ToString());
+                }
+
+                Assert.IsFalse(likeCountListRand.Equals(_listRand), "ListRands equals same count list");
+            }
+
+            Assert.IsTrue(new ListRand().Equals(new ListRand()), "ListRand with heads equals null not equals");
+
+
+            var likeListRand = new ListRand();
+            foreach (var node in _listRand.ToListNode())
+            {
+                likeListRand.Add(node);
+            }
+
+            Assert.IsTrue(likeListRand.Equals(_listRand), "ListRand not equals same list");
+
         }
     }
 }
