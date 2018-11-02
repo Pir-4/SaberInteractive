@@ -23,26 +23,46 @@ namespace SaberInteractive
         public override bool Equals(object obj)
         {
             return (obj is ListNode inputNode) &&
-                (ReferenceEquals(this, obj) ||
-                 (this.Data.Equals(inputNode.Data) &&
-                 ReferenceEquals(this.Perv, inputNode.Perv) && ReferenceEquals(this.Next, inputNode.Next) &&
-                 ReferenceEquals(this.Rand, inputNode.Rand)));
+                   (ReferenceEquals(this, obj) ||
+                    this.Data.Equals(inputNode.Data) &&
+                    EqualsRefNode(this.Perv, inputNode.Perv) &&
+                    EqualsRefNode(this.Next, inputNode.Next) &&
+                    EqualsRefNode(this.Rand, inputNode.Rand));
+            /*ReferenceEquals(this.Perv, inputNode.Perv) && 
+             ReferenceEquals(this.Next, inputNode.Next) &&
+            ReferenceEquals(this.Rand, inputNode.Rand));*/
         }
 
         public override int GetHashCode()
         {
             var hash = Data.GetHashCode();
 
-            if (Perv != null)
-                hash = hash ^ Perv.Guid.GetHashCode();
-
-            if (Next != null)
-                hash = hash ^ Next.Guid.GetHashCode();
-
-            if (Rand != null)
-                hash = hash ^ Rand.Guid.GetHashCode();
+            hash = GetHashCode(hash, this.Perv);
+            hash = GetHashCode(hash, this.Next);
+            hash = GetHashCode(hash, this.Rand);
 
             return hash;
+        }
+
+        private int GetHashCode(int hash, ListNode node)
+        {
+            if (node != null)
+                hash = hash ^ node.Guid.GetHashCode();
+            return hash;
+        }
+
+        private bool EqualsRefNode(ListNode expectedField, ListNode inputField)
+        {
+            if (expectedField == null)
+                return inputField == null;
+            else if(inputField == null)
+            {
+                return false;
+            }
+
+            // return ReferenceEquals(expectedField, inputField);
+             return expectedField.Guid.Equals(inputField.Guid);
+
         }
     }
 }
