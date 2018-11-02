@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,9 @@ namespace UnitTestListRand
     public class TestBase
     {
         protected ListRand _listRand;
+
+        protected const string TestFolderPath = @"E:\Git\My\SaberInteractive\TestFiles";
+        protected readonly string _serializeFile = Path.Combine(TestFolderPath, "serialize.txt");
 
         protected List<string> InitDatasAndListRand(int count)
         {
