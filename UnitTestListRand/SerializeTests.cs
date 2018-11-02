@@ -48,15 +48,27 @@ namespace UnitTestListRand
         }
 
         [TestCase(5)]
-       // [TestCase(0)]
-       // [TestCase(100)]
-        public void SerializeTest02(int count)
+        [TestCase(0)]
+        [TestCase(100)]
+        public void SerializeTest02Deserialize(int count)
         {
             Serialize(_serializeFile, count);
 
+            List<ListNode> deserializeListNode;
             using (var fileStream = new FileStream(_serializeFile,FileMode.Open, FileAccess.Read))
             {
-                Serializer.Deserialize(fileStream);
+                deserializeListNode = Serializer.Deserialize(fileStream);
+            }
+
+            Assert.IsTrue(_listRand.Count.Equals(deserializeListNode.Count), 
+                $"Size original list node equals deserialize list." +
+                $"Actual '{deserializeListNode.Count}', expected '{_listRand.Count}'");
+
+            foreach (var node in _listRand.ToListNode())
+            {
+                var sameCount = deserializeListNode.Count(item => item.Equals(node));
+                Assert.IsTrue(sameCount.Equals(1), 
+                    $"Original node with guid {node.Guid} contains in deserialize list '{sameCount}' times");
             }
         }
 
