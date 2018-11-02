@@ -11,11 +11,11 @@ namespace SaberInteractive
     public class Serializer
     {
         private static Dictionary<ListNode, string> _nodeDictionary;
-        private static readonly Func<string, string> _packagingItem = item => $"[{item}]";
+        private static readonly Func<string, string> _packagingItem = item => $"[{item}]\n";
 
         private static readonly Func<string, string, string> _packagingProperty =
             (name, value) => string.IsNullOrEmpty(value) ? string.Empty :
-                $"{name}:{value}|";
+                "{" + $"{name}:{value}" + "}";
 
         public static void Serialize(FileStream fileStream, ListNode head)
         {
@@ -25,7 +25,7 @@ namespace SaberInteractive
             {
                 while (current != null)
                 {
-                    var currentBuffer = new StringBuilder();
+                    var currentBuffer = new List<string>();
                     foreach (var fieldInfo in current.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
                     {
                         var fieldvalue = fieldInfo.GetValue(current);
@@ -40,12 +40,12 @@ namespace SaberInteractive
                             data = fieldvalue.ToString();
                         }
 
-                        currentBuffer.Append(_packagingProperty(fieldInfo.Name, data));
+                        currentBuffer.Add(_packagingProperty(fieldInfo.Name, data));
                     }
-                    buffer.Append(_packagingItem(currentBuffer.ToString()));
+                    buffer.Append(_packagingItem(string.Join(" ",currentBuffer)));
                     current = current.Next;
                 }
-                writer.Write(buffer.ToString());
+                writer.Write(buffer.ToString().TrimEnd(Environment.NewLine.ToCharArray()));
             }
         }
 
