@@ -37,18 +37,41 @@ namespace SaberInteractive
             return newNode;
         }
 
+        public ListNode GetNode(int index, bool isReverse = false)
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentException($"Input index not correct. Index from 0 to {Count-1}");
+            }
+
+            var current = isReverse ? Tail : Head;
+            var count = 0;
+            while (count != index && current != null)
+            {
+                current = isReverse ? current.Perv : current.Next;
+                count++;
+            }
+
+            return current;
+        }
+
         public List<string> ToListString(bool isReverse = false)
         {
             var result = new List<string>();
-            Foreach(current => result.Add(current.Data), isReverse);
+            ToList(current => result.Add(current.Data), isReverse);
             return result;
         }
 
         public List<ListNode> ToListNode(bool isReverse = false)
         {
             var result = new List<ListNode>();
-            Foreach(current => result.Add(current), isReverse);
+            ToList(current => result.Add(current), isReverse);
             return result;
+        }
+
+        public bool IsEmpty
+        {
+            get { return Head == null; }
         }
 
         public void Serialize(FileStream s)
@@ -61,7 +84,7 @@ namespace SaberInteractive
             Head = Serializer.Deserialize(s);
         }
 
-        private void Foreach(Action<ListNode> actionCurrentItem, bool isReverse = false)
+        private void ToList(Action<ListNode> actionCurrentItem, bool isReverse = false)
         {
             var current = isReverse ? Tail : Head;
             while (current != null)
