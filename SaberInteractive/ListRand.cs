@@ -81,7 +81,7 @@ namespace SaberInteractive
 
         public void Deserialize(FileStream s)
         {
-            Head = Serializer.Deserialize(s);
+            Serializer.Deserialize(s);
         }
 
         private void ToList(Action<ListNode> actionCurrentItem, bool isReverse = false)

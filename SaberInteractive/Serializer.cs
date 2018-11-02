@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -50,15 +51,16 @@ namespace SaberInteractive
             }
         }
 
-        public static ListNode Deserialize(FileStream fileStream)
+        public static List<ListNode> Deserialize(FileStream fileStream)
         {
-            ListNode head = null;
+            var elementsGuidStringFields = new Dictionary<Guid, Dictionary<string, string>>();
+
             using (StreamReader reader = new StreamReader(fileStream))
             {
                 foreach (Match elementMatch in Regex.Matches(reader.ReadToEnd(), @"\[(.*?)\]"))
                 {
                     var elementString = elementMatch.Groups[1].Value;
-                    var elementDictionary = new Dictionary<string,string>();
+                    var elementDictionary = new Dictionary<string, string>();
 
                     foreach (Match fieldMatch in Regex.Matches(elementString, @"\{(.*?)\}"))
                     {
@@ -66,10 +68,37 @@ namespace SaberInteractive
                         var match = Regex.Match(fieldString, "(.*):(.*)");
                         elementDictionary[match.Groups[1].Value] = match.Groups[2].Value;
                     }
+                    elementsGuidStringFields[Guid.Parse(elementDictionary[nameof(ListNode.Guid)])] = elementDictionary;
+                    elementDictionary.Remove(nameof(ListNode.Guid));
                 }
             }
 
-            return head;
+            return Parse(elementsGuidStringFields);
+        }
+
+        private static List<ListNode> Parse(Dictionary<Guid, Dictionary<string, string>> elementsGuidStringFields)
+        {
+            var result = new List<ListNode>();
+            var elementsGuidListNode = new Dictionary<Guid, ListNode>();
+            foreach (var kvp in elementsGuidStringFields)
+            {
+                var data = kvp.Value[nameof(ListNode.Data)];
+                elementsGuidListNode[kvp.Key] = new ListNode(data, kvp.Key);
+                kvp.Value.Remove(nameof(ListNode.Data));
+            }
+
+            foreach (var kvp in elementsGuidStringFields)
+            {
+                var currentItem = elementsGuidListNode[kvp.Key];
+                foreach (var elementField in kvp.Value)
+                {
+                    var guid = Guid.Parse(elementField.Value);
+                    var insertItem = elementsGuidListNode[guid];
+                    currentItem.GetType().GetField(elementField.Key).SetValue(currentItem, insertItem);
+                }
+                result.Add(currentItem);
+            }
+            return result;
         }
     }
 }

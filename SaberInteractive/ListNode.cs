@@ -12,18 +12,17 @@ namespace SaberInteractive
         public ListNode Perv;
         public ListNode Next;
         public ListNode Rand;
-        public readonly Guid Guid = Guid.NewGuid();
+        public Guid Guid;
 
-        public ListNode(string data)
+        public ListNode(string data, Guid? guid = null)
         {
             Data = data;
+            Guid = guid ?? Guid.NewGuid();
         }
 
         public override bool Equals(object obj)
         {
-            var inputNode = obj as ListNode;
-
-            return (inputNode != null) &&
+            return (obj is ListNode inputNode) &&
                 (ReferenceEquals(this, obj) ||
                  (this.Data.Equals(inputNode.Data) &&
                  ReferenceEquals(this.Perv, inputNode.Perv) && ReferenceEquals(this.Next, inputNode.Next) &&
