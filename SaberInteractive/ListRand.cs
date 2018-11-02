@@ -74,14 +74,15 @@ namespace SaberInteractive
             get { return Head == null; }
         }
 
-        public void Serialize(FileStream s)
+        public void Serialize(FileStream fileStream)
         {
-            Serializer.Serialize(s, Head);
+            Serializer.Serialize(fileStream, Head);
         }
 
-        public void Deserialize(FileStream s)
+        public void Deserialize(FileStream fileStream)
         {
-            Serializer.Deserialize(s);
+            var tempList = Serializer.Deserialize(fileStream);
+            InitHeads(tempList);
         }
 
         private void ToList(Action<ListNode> actionCurrentItem, bool isReverse = false)
@@ -91,6 +92,35 @@ namespace SaberInteractive
             {
                 actionCurrentItem.Invoke(current);
                 current = isReverse ? current.Perv : current.Next;
+            }
+        }
+
+        private void InitHeads(List<ListNode> inputList)
+        {
+            var headsCount = 0;
+            var tailsCount = 0;
+            foreach (var node in inputList)
+            {
+                if (node.Perv == null)
+                {
+                    Head = node;
+                    headsCount++;
+                }
+
+                if (node.Next == null)
+                {
+                    Tail = node;
+                    tailsCount++;
+                }
+
+                if (headsCount > 1)
+                {
+                    throw new ArgumentException($"Input list has more one heads. Has {headsCount}");
+                }
+                if (tailsCount > 1)
+                {
+                    throw new ArgumentException($"Input list has more one tails. Has {tailsCount}");
+                }
             }
         }
     }
