@@ -8,11 +8,11 @@ namespace SaberInteractive
 {
     public class ListNode
     {
-        public readonly Guid Guid = Guid.NewGuid();
+        public string Data;
         public ListNode Perv;
         public ListNode Next;
         public ListNode Rand;
-        public string Data;
+        public readonly Guid Guid = Guid.NewGuid();
 
         public ListNode(string data)
         {
