@@ -12,12 +12,23 @@ namespace SaberInteractive
 {
     public class Serializer
     {
+        private const string ItemOpen = "[";
+        private const string ItemClose = "]";
+        private static string ItemRegexPattern = $@"\{ItemOpen}(.*?)\{ItemClose}";
+
+        private const string FieldOpen = "{";
+        private const string FieldClose = "}";
+        private static string FieldRegexPattern = $@"\{FieldOpen}(.*?)\{FieldClose}";
+
+        private const string DataSplitter = ":";
+        private static string DataRegexPattern = $"(.*){DataSplitter}(.*)";
+
+
         private static Dictionary<ListNode, string> _nodeDictionary;
-        private static readonly Func<string, string> _packagingItem = item => $"[{item}]\n";
+        private static readonly Func<string, string> _packagingItem = item => $"{ItemOpen}" +$"{item}" + $"{ItemClose}\n";
 
         private static readonly Func<string, string, string> _packagingProperty =
-            (name, value) => string.IsNullOrEmpty(value) ? string.Empty :
-                "{" + $"{name}:{value}" + "}";
+            (name, value) => $"{FieldOpen}" + $"{name}:{value}" + $"{FieldClose}";
 
         public static void Serialize(FileStream fileStream, ListNode head)
         {
@@ -57,15 +68,15 @@ namespace SaberInteractive
 
             using (StreamReader reader = new StreamReader(fileStream))
             {
-                foreach (Match elementMatch in Regex.Matches(reader.ReadToEnd(), @"\[(.*?)\]"))
+                foreach (Match elementMatch in Regex.Matches(reader.ReadToEnd(), ItemRegexPattern))
                 {
                     var elementString = elementMatch.Groups[1].Value;
                     var elementDictionary = new Dictionary<string, string>();
 
-                    foreach (Match fieldMatch in Regex.Matches(elementString, @"\{(.*?)\}"))
+                    foreach (Match fieldMatch in Regex.Matches(elementString, FieldRegexPattern))
                     {
                         var fieldString = fieldMatch.Groups[1].Value;
-                        var match = Regex.Match(fieldString, "(.*):(.*)");
+                        var match = Regex.Match(fieldString, DataRegexPattern);
                         elementDictionary[match.Groups[1].Value] = match.Groups[2].Value;
                     }
                     elementsGuidStringFields[Guid.Parse(elementDictionary[nameof(ListNode.Guid)])] = elementDictionary;
