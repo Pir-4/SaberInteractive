@@ -28,9 +28,6 @@ namespace SaberInteractive
                     EqualsRefNode(this.Perv, inputNode.Perv) &&
                     EqualsRefNode(this.Next, inputNode.Next) &&
                     EqualsRefNode(this.Rand, inputNode.Rand));
-            /*ReferenceEquals(this.Perv, inputNode.Perv) && 
-             ReferenceEquals(this.Next, inputNode.Next) &&
-            ReferenceEquals(this.Rand, inputNode.Rand));*/
         }
 
         public override int GetHashCode()
@@ -55,13 +52,11 @@ namespace SaberInteractive
         {
             if (expectedField == null)
                 return inputField == null;
-            else if(inputField == null)
+            else if (inputField == null)
             {
                 return false;
             }
-
-            // return ReferenceEquals(expectedField, inputField);
-             return expectedField.Guid.Equals(inputField.Guid);
+            return expectedField.Guid.Equals(inputField.Guid);
 
         }
     }
