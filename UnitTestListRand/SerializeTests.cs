@@ -11,16 +11,16 @@ using SaberInteractive;
 namespace UnitTestListRand
 {
     [TestFixture()]
-   public class SerializeTests : ListRandTests
+    public class SerializeTests : ListRandTests
     {
         private const string TestFolderPath = @"E:\Git\My\SaberInteractive\TestFiles";
-        private readonly string _serializeFile = Path.Combine(TestFolderPath,"serialize.txt");
+        private readonly string _serializeFile = Path.Combine(TestFolderPath, "serialize.txt");
         private readonly string _deserializeFile = Path.Combine(TestFolderPath, "deserialize.txt");
 
         [TestCase(5)]
         [TestCase(0)]
         [TestCase(100)]
-        public void SerializeTest01ContainsDataInLine(int count)
+        public void SerializeTest01SerializeCheckContainsDataInLine(int count)
         {
             Serialize(_serializeFile, count);
 
@@ -44,6 +44,19 @@ namespace UnitTestListRand
                         ActualValueContains(actualValue, node.Rand, "Rand.Guid");
                     }
                 }
+            }
+        }
+
+        [TestCase(5)]
+       // [TestCase(0)]
+       // [TestCase(100)]
+        public void SerializeTest02(int count)
+        {
+            Serialize(_serializeFile, count);
+
+            using (var fileStream = new FileStream(_serializeFile,FileMode.Open, FileAccess.Read))
+            {
+                Serializer.Deserialize(fileStream);
             }
         }
 

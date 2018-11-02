@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 
 namespace SaberInteractive
@@ -42,16 +43,33 @@ namespace SaberInteractive
 
                         currentBuffer.Add(_packagingProperty(fieldInfo.Name, data));
                     }
-                    buffer.Append(_packagingItem(string.Join(" ",currentBuffer)));
+                    buffer.Append(_packagingItem(string.Join(" ", currentBuffer)));
                     current = current.Next;
                 }
                 writer.Write(buffer.ToString().TrimEnd(Environment.NewLine.ToCharArray()));
             }
         }
 
-        public static ListNode Deserialize(FileStream s)
+        public static ListNode Deserialize(FileStream fileStream)
         {
-            throw new NotImplementedException();
+            ListNode head = null;
+            using (StreamReader reader = new StreamReader(fileStream))
+            {
+                foreach (Match elementMatch in Regex.Matches(reader.ReadToEnd(), @"\[(.*?)\]"))
+                {
+                    var elementString = elementMatch.Groups[1].Value;
+                    var elementDictionary = new Dictionary<string,string>();
+
+                    foreach (Match fieldMatch in Regex.Matches(elementString, @"\{(.*?)\}"))
+                    {
+                        var fieldString = fieldMatch.Groups[1].Value;
+                        var match = Regex.Match(fieldString, "(.*):(.*)");
+                        elementDictionary[match.Groups[1].Value] = match.Groups[2].Value;
+                    }
+                }
+            }
+
+            return head;
         }
     }
 }
