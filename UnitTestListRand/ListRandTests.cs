@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using SaberInteractive;
@@ -25,7 +26,7 @@ namespace UnitTestListRand
             Assert.IsTrue(_listRand.Count.Equals(0),
                 $"ListRand isn't empty");
 
-            var datas = InitDatasAndListRand(count);
+            var datas = InitDatasAndListRandByGuid(count);
 
             Assert.IsTrue(_listRand.Count.Equals(datas.Count()),
                 $"Counts not equals. ListRand {_listRand.Count}, expected {datas.Count()}");
@@ -42,7 +43,7 @@ namespace UnitTestListRand
             Assert.IsFalse(_listRand.ToListString().Any(),
                 $"ListRand isn't empty");
 
-            var datas = InitDatasAndListRand(count);
+            var datas = InitDatasAndListRandByGuid(count);
 
             if (isReverse)
             {
@@ -72,7 +73,7 @@ namespace UnitTestListRand
             Assert.IsFalse(_listRand.ToListString().Any(),
                 $"ListRand isn't empty");
 
-            var datas = InitDatasAndListRand(count);
+            var datas = InitDatasAndListRandByGuid(count);
 
             if (isReverse)
             {
@@ -93,7 +94,7 @@ namespace UnitTestListRand
         [Test]
         public void ListRandTest04GetNodeConfines()
         {
-            InitDatasAndListRand(3);
+            InitDatasAndListRandByGuid(3);
             Assert.IsTrue(_listRand.GetNode(_listRand.Count) == null, $"List return item with numbers equals count {_listRand.Count}");
 
             try
@@ -112,7 +113,7 @@ namespace UnitTestListRand
         [TestCase(100)]
         public void ListRandTest05Equals(int count)
         {
-            InitDatasAndListRand(count);
+            InitDatasAndListRandByGuid(count);
 
             Assert.IsFalse(_listRand.Equals(null), "ListRand equals 'null'");
             Assert.IsFalse(_listRand.Equals(new DateTime()), "ListRand equals 'date time'");
@@ -141,6 +142,38 @@ namespace UnitTestListRand
 
             Assert.IsTrue(likeListRand.Equals(_listRand), "ListRand not equals same list");
 
+        }
+
+        [TestCase(5)]
+        [TestCase(0)]
+        [TestCase(100)]
+        public void ListRandTest06SerializeDeserialize(int count)
+        {
+            Serialize(_serializeFile, count);
+
+            var deserializeList = new ListRand();
+
+            using (var fileStream = new FileStream(_serializeFile, FileMode.Open, FileAccess.Read))
+            {
+                deserializeList.Deserialize(fileStream);
+            }
+
+            Assert.IsTrue(_listRand.Equals(deserializeList), "ListRands not equals");
+
+        }
+
+        protected void Serialize(string serializeFile, int count)
+        {
+            InitDatasAndListRandByGuid(count);
+            InitListNodeRandomItem();
+
+            if (File.Exists(_serializeFile))
+                File.Delete(_serializeFile);
+
+            using (var fileStream = new FileStream(serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+               _listRand.Serialize(fileStream);
+            }
         }
     }
 }
