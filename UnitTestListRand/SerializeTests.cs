@@ -74,6 +74,47 @@ namespace UnitTestListRand
             }
         }
 
+        [TestCase("")]
+        [TestCase("test[test]test")]
+        [TestCase("test [ test ] test")]
+        [TestCase("test{test}test")]
+        [TestCase("test { test } test")]
+        [TestCase("test:test:test")]
+        [TestCase("test : test : test")]
+        public void SerializeTest03BadData(string badData)
+        {
+            InitDatasAndListRandByGuid(2);
+            _listRand.Add(badData);
+            _listRand.Add(Guid.NewGuid().ToString());
+            _listRand.Add(Guid.NewGuid().ToString());
+            InitListNodeRandomItem();
+
+            if (File.Exists(_serializeFile))
+                File.Delete(_serializeFile);
+
+            using (var fileStream = new FileStream(_serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                Serializer.Serialize(fileStream, _listRand.GetNode(0));
+            }
+
+            List<ListNode> deserializeListNode;
+            using (var fileStream = new FileStream(_serializeFile, FileMode.Open, FileAccess.Read))
+            {
+                deserializeListNode = Serializer.Deserialize(fileStream);
+            }
+
+            Assert.IsTrue(_listRand.Count.Equals(deserializeListNode.Count),
+                $"Size original list node equals deserialize list." +
+                $"Actual '{deserializeListNode.Count}', expected '{_listRand.Count}'");
+
+            foreach (var node in _listRand.ToListNode())
+            {
+                var sameCount = deserializeListNode.Count(item => item.Equals(node));
+                Assert.IsTrue(sameCount.Equals(1),
+                    $"Original node with guid {node.Guid} contains in deserialize list '{sameCount}' times");
+            }
+        }
+
         private static void ActualValueContains(string actualValue, ListNode node, string fieldName)
         {
             if (node != null)
