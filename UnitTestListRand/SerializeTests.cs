@@ -94,7 +94,7 @@ namespace UnitTestListRand
 
             using (var fileStream = new FileStream(serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
             {
-                Serializer.Serialize(fileStream, _listRand.Head);
+                Serializer.Serialize(fileStream, _listRand.GetNode(0));
             }
         }
     }

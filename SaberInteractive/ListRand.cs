@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SaberInteractive
 {
     public class ListRand
     {
-        public ListNode Head;
+        private ListNode Head;
         private ListNode Tail;
 
         public int Count { get; private set; }

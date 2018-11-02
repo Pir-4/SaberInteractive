@@ -159,7 +159,6 @@ namespace UnitTestListRand
             }
 
             Assert.IsTrue(_listRand.Equals(deserializeList), "ListRands not equals");
-
         }
 
         protected void Serialize(string serializeFile, int count)
