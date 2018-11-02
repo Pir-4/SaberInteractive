@@ -85,6 +85,12 @@ namespace SaberInteractive
             InitHeads(tempList);
         }
 
+        public override bool Equals(object obj)
+        {
+            return (obj is ListRand inputListRand) &&
+                   (ReferenceEquals(this, obj) || EqualsListRand(inputListRand));
+        }
+
         private void ToList(Action<ListNode> actionCurrentItem, bool isReverse = false)
         {
             var current = isReverse ? Tail : Head;
@@ -122,6 +128,31 @@ namespace SaberInteractive
                     throw new ArgumentException($"Input list has more one tails. Has {tailsCount}");
                 }
             }
+        }
+
+        private bool EqualsListRand(ListRand inputListRand)
+        {
+            if (!inputListRand.Count.Equals(this.Count))
+                return false;
+
+            var inputCurrent = inputListRand.GetNode(0);
+            var current = Head;
+
+            if (inputCurrent == null && current == null)
+                return true;
+
+            while (inputCurrent != null && current != null)
+            {
+                if (!inputCurrent.Equals(current))
+                {
+                    return false;
+                }
+
+                inputCurrent = inputCurrent.Next;
+                current = current.Next;
+            }
+
+            return true;
         }
     }
 }
