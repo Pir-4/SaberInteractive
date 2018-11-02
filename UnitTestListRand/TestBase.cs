@@ -15,7 +15,7 @@ namespace UnitTestListRand
         protected const string TestFolderPath = @"E:\Git\My\SaberInteractive\TestFiles";
         protected readonly string _serializeFile = Path.Combine(TestFolderPath, "serialize.txt");
 
-        protected List<string> InitDatasAndListRand(int count)
+        protected List<string> InitDatasAndListRandByGuid(int count)
         {
             _listRand = _listRand ?? new ListRand();
             var datas = Enumerable.Range(0, count).Select(_ => Guid.NewGuid().ToString()).ToList();

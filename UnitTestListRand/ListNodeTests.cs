@@ -21,7 +21,7 @@ namespace UnitTestListRand
         [Test]
         public void ListNodeTest01Equals()
         {
-            InitDatasAndListRand(2);
+            InitDatasAndListRandByGuid(2);
             var listNodes = _listRand.ToListNode();
 
             Assert.IsFalse(listNodes[0].Equals(null), "ListNode equals 'null'");
@@ -51,7 +51,7 @@ namespace UnitTestListRand
             Assert.IsTrue(sameListNode.GetHashCode() == hashString, "Hash codes of identical elements are equal");
 
 
-            InitDatasAndListRand(3);
+            InitDatasAndListRandByGuid(3);
             var listNodes = _listRand.ToListNode();
 
             for (int i = 0; i < listNodes.Count; i++)

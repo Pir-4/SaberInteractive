@@ -74,9 +74,19 @@ namespace UnitTestListRand
             }
         }
 
-        private void Serialize(string serializeFile, int count)
+        private static void ActualValueContains(string actualValue, ListNode node, string fieldName)
         {
-            InitDatasAndListRand(count);
+            if (node != null)
+            {
+                Assert.IsTrue(actualValue.Contains(node.Guid.ToString()),
+                    $"Serialize string '{fieldName}' not contains expected data." +
+                    $"Actual '{actualValue}', expected '{node.Guid}'");
+            }
+        }
+
+        protected void Serialize(string serializeFile, int count)
+        {
+            InitDatasAndListRandByGuid(count);
             InitListNodeRandomItem();
 
             if (File.Exists(_serializeFile))
@@ -85,16 +95,6 @@ namespace UnitTestListRand
             using (var fileStream = new FileStream(serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 Serializer.Serialize(fileStream, _listRand.Head);
-            }
-        }
-
-        private static void ActualValueContains(string actualValue, ListNode node, string fieldName)
-        {
-            if (node != null)
-            {
-                Assert.IsTrue(actualValue.Contains(node.Guid.ToString()),
-                    $"Serialize string '{fieldName}' not contains expected data." +
-                    $"Actual '{actualValue}', expected '{node.Guid}'");
             }
         }
     }
