@@ -79,10 +79,10 @@ namespace UnitTestListRand
         [TestCase("test [ test ] test")]
         [TestCase("test [[ test ]] test")]
         [TestCase("test{test}test")]
-        [TestCase("test { test } test")]
+        [TestCase("test { test } test", true)]
         [TestCase("test:test:test")]
         [TestCase("test : test : test")]
-        public void SerializeTest03BadData(string badData)
+        public void SerializeTest03BadData(string badData, bool isException = false)
         {
             InitDatasAndListRandByGuid(2);
             _listRand.Add(badData);
@@ -93,10 +93,19 @@ namespace UnitTestListRand
             if (File.Exists(_serializeFile))
                 File.Delete(_serializeFile);
 
-            using (var fileStream = new FileStream(_serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
+            try
             {
-                Serializer.Serialize(fileStream, _listRand.GetNode(0));
+                using (var fileStream = new FileStream(_serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
+                {
+                    Serializer.Serialize(fileStream, _listRand.GetNode(0));
+                }
             }
+            catch (FormatException e)
+            {
+                Assert.IsTrue(isException, "This error is not expected");
+                return;
+            }
+           
 
             List<ListNode> deserializeListNode;
             using (var fileStream = new FileStream(_serializeFile, FileMode.Open, FileAccess.Read))
