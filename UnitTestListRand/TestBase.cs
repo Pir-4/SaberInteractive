@@ -12,7 +12,7 @@ namespace UnitTestListRand
     {
         protected ListRand _listRand;
 
-        protected const string TestFolderPath = @"E:\Git\My\SaberInteractive\TestFiles";
+        protected const string TestFolderPath = @"E:\education\programs\SaberInteractive\TestFiles";
         protected readonly string _serializeFile = Path.Combine(TestFolderPath, "serialize.txt");
 
         protected List<string> InitDatasAndListRandByGuid(int count)

@@ -22,8 +22,12 @@ namespace SaberInteractive
 
         public override bool Equals(object obj)
         {
-            return (obj is ListNode inputNode) &&
-                   (ReferenceEquals(this, obj) ||
+            var inputNode = obj as ListNode;
+
+            if (inputNode == null)
+                return false;
+
+            return (ReferenceEquals(this, obj) ||
                     this.Data.Equals(inputNode.Data) &&
                     EqualsRefNode(this.Perv, inputNode.Perv) &&
                     EqualsRefNode(this.Next, inputNode.Next) &&

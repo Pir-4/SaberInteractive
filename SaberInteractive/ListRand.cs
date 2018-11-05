@@ -89,8 +89,11 @@ namespace SaberInteractive
 
         public override bool Equals(object obj)
         {
-            return (obj is ListRand inputListRand) &&
-                   (ReferenceEquals(this, obj) || EqualsListRand(inputListRand));
+            var inputListRand = obj as ListRand;
+            if (inputListRand == null)
+                return false;
+
+            return ReferenceEquals(this, obj) || EqualsListRand(inputListRand);
         }
 
         private void ToList(Action<ListNode> actionCurrentItem, bool isReverse = false)
