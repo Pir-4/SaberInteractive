@@ -27,7 +27,7 @@ namespace SaberInteractive
 
 
         private static Dictionary<ListNode, string> _nodeDictionary;
-        private static readonly Func<string, string> _packagingItem = item => $"{ItemOpen}" +$"{item}" + $"{ItemClose}\n";
+        private static readonly Func<string, string> _packagingItem = item => $"{ItemOpen}" + $"{item}" + $"{ItemClose}\n";
 
         private static readonly Func<string, string, string> _packagingProperty =
             (name, value) => $"{FieldOpen}" + $"{name}:{value}" + $"{FieldClose}";
@@ -50,8 +50,7 @@ namespace SaberInteractive
                         var data = fieldValue.ToString();
                         if (fieldValue is ListNode)
                             data = (fieldValue as ListNode).Guid.ToString();
-
-                        data = data;//.Replace("[", @"\[").Replace("]", @"\]");
+ 
                         currentBuffer.Add(_packagingProperty(fieldInfo.Name, data));
                     }
                     buffer.Append(_packagingItem(string.Join(" ", currentBuffer)));
@@ -104,7 +103,7 @@ namespace SaberInteractive
                 {
                     var guid = Guid.Parse(elementField.Value);
                     var insertItem = elementsGuidListNode[guid];
-                    currentItem.GetType().GetField(elementField.Key).SetValue(currentItem, insertItem);
+                    SetValueByFieldInfo(currentItem, elementField.Key, insertItem);
                 }
                 result.Add(currentItem);
             }
@@ -120,6 +119,11 @@ namespace SaberInteractive
             }
 
             return Cache[type].ToArray();
+        }
+
+        private static void SetValueByFieldInfo(object obj, string fieldName, object value)
+        {
+            FieldInfo(obj).First(info => info.Name.Equals(fieldName)).SetValue(obj, value);
         }
     }
 }
