@@ -97,7 +97,7 @@ namespace UnitTestListRand
             {
                 using (var fileStream = new FileStream(_serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
                 {
-                    Serializer.Serialize(fileStream, _listRand.GetNode(0));
+                    Serializer.Serialize(fileStream, _listRand.GetNode(0), current => current.Next);
                 }
             }
             catch (FormatException e)
@@ -145,7 +145,7 @@ namespace UnitTestListRand
 
             using (var fileStream = new FileStream(serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
             {
-                Serializer.Serialize(fileStream, _listRand.GetNode(0));
+                Serializer.Serialize(fileStream, _listRand.GetNode(0), current => current.Next);
             }
         }
     }

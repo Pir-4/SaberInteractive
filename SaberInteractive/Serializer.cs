@@ -31,7 +31,7 @@ namespace SaberInteractive
 
         private static readonly Dictionary<Type, IEnumerable<FieldInfo>> Cache = new Dictionary<Type, IEnumerable<FieldInfo>>();
 
-        public static void Serialize(FileStream fileStream, ListNode node)
+        public static void Serialize(FileStream fileStream, ListNode node, Func<ListNode, ListNode> next)
         {
             var buffer = new StringBuilder();
             var current = node;
@@ -59,7 +59,7 @@ namespace SaberInteractive
                         itemBuffer.Add(PackagingField(fieldInfo.Name, data));
                     }
                     buffer.Append(PackagingItem(string.Join(" ", itemBuffer)));
-                    current = current.Next;
+                    current = next(current);
                 }
                 writer.Write(buffer.ToString().TrimEnd(Environment.NewLine.ToCharArray()));
             }

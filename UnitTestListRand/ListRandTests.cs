@@ -147,9 +147,12 @@ namespace UnitTestListRand
         [TestCase(5)]
         [TestCase(0)]
         [TestCase(100)]
-        public void ListRandTest06SerializeDeserialize(int count)
+        [TestCase(5,true)]
+        [TestCase(0,true)]
+        [TestCase(100,true)]
+        public void ListRandTest06SerializeDeserialize(int count, bool isReverse = false)
         {
-            Serialize(_serializeFile, count);
+            Serialize(_serializeFile, count, isReverse);
 
             var deserializeList = new ListRand();
 
@@ -161,7 +164,7 @@ namespace UnitTestListRand
             Assert.IsTrue(_listRand.Equals(deserializeList), "ListRands not equals");
         }
 
-        protected void Serialize(string serializeFile, int count)
+        protected void Serialize(string serializeFile, int count, bool isReverse = false)
         {
             InitDatasAndListRandByGuid(count);
             InitListNodeRandomItem();
@@ -171,7 +174,7 @@ namespace UnitTestListRand
 
             using (var fileStream = new FileStream(serializeFile, FileMode.OpenOrCreate, FileAccess.Write))
             {
-               _listRand.Serialize(fileStream);
+               _listRand.Serialize(fileStream, isReverse);
             }
         }
     }
