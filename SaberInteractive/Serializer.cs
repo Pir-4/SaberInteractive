@@ -14,7 +14,7 @@ namespace SaberInteractive
     {
         private const string ItemOpen = "[";
         private const string ItemClose = "]";
-        private static string ItemRegexPattern = @"(^|[\W])\[(.*?)\]($|(?!( |\w)))";//@"(\W?)\[(.*?)\](\W|$)";// $@"\{ItemOpen}(.*?)\{ItemClose}";
+        private static string ItemRegexPattern = @"(^|[\W])\[(.*?)\]($|(?![ \w\S]))";//@"(^|[\W])\[(.*?)\]($|(?!( |\w)))";//@"(\W?)\[(.*?)\](\W|$)";// $@"\{ItemOpen}(.*?)\{ItemClose}";
 
         private const string FieldOpen = "{";
         private const string FieldClose = "}";
