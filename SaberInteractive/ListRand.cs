@@ -73,9 +73,9 @@ namespace SaberInteractive
 
         public bool IsEmpty => Head == null;
 
-        public void Serialize(FileStream fileStream)
+        public void Serialize(FileStream fileStream, bool isReverse = false)
         {
-            Serializer.Serialize(fileStream, Head);
+            Serializer.Serialize(fileStream, isReverse ? Tail : Head);
         }
 
         public void Deserialize(FileStream fileStream)
