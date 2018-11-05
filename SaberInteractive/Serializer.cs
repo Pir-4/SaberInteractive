@@ -14,23 +14,23 @@ namespace SaberInteractive
     {
         private const string ItemOpen = "[";
         private const string ItemClose = "]";
-        private static string ItemRegexPattern = @"(^|[\W])\[(.*?)\]($|(?![ \w\S]))";//@"(^|[\W])\[(.*?)\]($|(?!( |\w)))";//@"(\W?)\[(.*?)\](\W|$)";// $@"\{ItemOpen}(.*?)\{ItemClose}";
+        private static readonly string ItemRegexPattern = $@"(^|[\W])\{ItemOpen}(.*?)\{ItemClose}($|(?![ \w\S]))";
 
         private const string FieldOpen = "{";
         private const string FieldClose = "}";
-        private static string FieldRegexPattern = @"(^|\s|)\{(.*?)\}($|\s)";//$@"\{FieldOpen}(.*?)\{FieldClose}"
+        private static readonly string FieldRegexPattern = $@"(^|\s|)\{FieldOpen}(.*?)\{FieldClose}($|\s)";
 
         private const string DataSplitter = ":";
-        private static string DataRegexPattern = $"(.*?){DataSplitter}(.*)";
+        private static readonly string DataRegexPattern = $"(.*?){DataSplitter}(.*)";
 
-        private static Dictionary<Type, IEnumerable<FieldInfo>> Cache = new Dictionary<Type, IEnumerable<FieldInfo>>();
+        public static readonly List<string> FailSymbols = new List<string>() { $"{FieldClose} " };
 
+        private static readonly Func<string, string> PackagingItem = item => $"{ItemOpen}" + $"{item}" + $"{ItemClose}\n";
 
-        private static Dictionary<ListNode, string> _nodeDictionary;
-        private static readonly Func<string, string> _packagingItem = item => $"{ItemOpen}" + $"{item}" + $"{ItemClose}\n";
-
-        private static readonly Func<string, string, string> _packagingProperty =
+        private static readonly Func<string, string, string> PackagingProperty =
             (name, value) => $"{FieldOpen}" + $"{name}:{value}" + $"{FieldClose}";
+
+        private static readonly Dictionary<Type, IEnumerable<FieldInfo>> Cache = new Dictionary<Type, IEnumerable<FieldInfo>>();
 
         public static void Serialize(FileStream fileStream, ListNode head)
         {
@@ -50,10 +50,16 @@ namespace SaberInteractive
                         var data = fieldValue.ToString();
                         if (fieldValue is ListNode)
                             data = (fieldValue as ListNode).Guid.ToString();
- 
-                        currentBuffer.Add(_packagingProperty(fieldInfo.Name, data));
+
+                        foreach (var symbol in FailSymbols)
+                        {
+                            if (data.Contains(symbol))
+                                throw new FormatException($"String '{data}' contains bad symbol '{symbol}'. " +
+                                                          $"String not contains symbols: {string.Join(", ", FailSymbols)}");
+                        }
+                        currentBuffer.Add(PackagingProperty(fieldInfo.Name, data));
                     }
-                    buffer.Append(_packagingItem(string.Join(" ", currentBuffer)));
+                    buffer.Append(PackagingItem(string.Join(" ", currentBuffer)));
                     current = current.Next;
                 }
                 writer.Write(buffer.ToString().TrimEnd(Environment.NewLine.ToCharArray()));
@@ -124,14 +130,6 @@ namespace SaberInteractive
         private static void SetValueByFieldInfo(object obj, string fieldName, object value)
         {
             FieldInfo(obj).First(info => info.Name.Equals(fieldName)).SetValue(obj, value);
-        }
-
-        private static void CheckDataOnBadSimbol(string data)
-        {
-            var bad = new List<string>()
-            {
-                "} "
-            };
         }
     }
 }
