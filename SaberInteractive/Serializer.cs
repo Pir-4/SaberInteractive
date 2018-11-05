@@ -18,10 +18,10 @@ namespace SaberInteractive
 
         private const string FieldOpen = "{";
         private const string FieldClose = "}";
-        private static string FieldRegexPattern = $@"\{FieldOpen}(.*?)\{FieldClose}";
+        private static string FieldRegexPattern = @"(^|\s|)\{(.*?)\}($|\s)";//$@"\{FieldOpen}(.*?)\{FieldClose}"
 
         private const string DataSplitter = ":";
-        private static string DataRegexPattern = $"(.*){DataSplitter}(.*)";
+        private static string DataRegexPattern = $"(.*?){DataSplitter}(.*)";
 
         private static Dictionary<Type, IEnumerable<FieldInfo>> Cache = new Dictionary<Type, IEnumerable<FieldInfo>>();
 
@@ -73,7 +73,7 @@ namespace SaberInteractive
 
                     foreach (Match fieldMatch in Regex.Matches(elementString, FieldRegexPattern))
                     {
-                        var fieldString = fieldMatch.Groups[1].Value;
+                        var fieldString = fieldMatch.Groups[2].Value;
                         var match = Regex.Match(fieldString, DataRegexPattern);
                         elementDictionary[match.Groups[1].Value] = match.Groups[2].Value;
                     }
@@ -124,6 +124,14 @@ namespace SaberInteractive
         private static void SetValueByFieldInfo(object obj, string fieldName, object value)
         {
             FieldInfo(obj).First(info => info.Name.Equals(fieldName)).SetValue(obj, value);
+        }
+
+        private static void CheckDataOnBadSimbol(string data)
+        {
+            var bad = new List<string>()
+            {
+                "} "
+            };
         }
     }
 }
