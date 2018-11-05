@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -27,20 +26,20 @@ namespace SaberInteractive
 
         private static readonly Func<string, string> PackagingItem = item => $"{ItemOpen}" + $"{item}" + $"{ItemClose}\n";
 
-        private static readonly Func<string, string, string> PackagingProperty =
+        private static readonly Func<string, string, string> PackagingField =
             (name, value) => $"{FieldOpen}" + $"{name}:{value}" + $"{FieldClose}";
 
         private static readonly Dictionary<Type, IEnumerable<FieldInfo>> Cache = new Dictionary<Type, IEnumerable<FieldInfo>>();
 
-        public static void Serialize(FileStream fileStream, ListNode head)
+        public static void Serialize(FileStream fileStream, ListNode node)
         {
             var buffer = new StringBuilder();
-            var current = head;
+            var current = node;
             using (StreamWriter writer = new StreamWriter(fileStream))
             {
                 while (current != null)
                 {
-                    var currentBuffer = new List<string>();
+                    var itemBuffer = new List<string>();
                     foreach (var fieldInfo in FieldInfo(current))
                     {
                         var fieldValue = fieldInfo.GetValue(current);
@@ -57,9 +56,9 @@ namespace SaberInteractive
                                 throw new FormatException($"String '{data}' contains bad symbol '{symbol}'. " +
                                                           $"String not contains symbols: {string.Join(", ", FailSymbols)}");
                         }
-                        currentBuffer.Add(PackagingProperty(fieldInfo.Name, data));
+                        itemBuffer.Add(PackagingField(fieldInfo.Name, data));
                     }
-                    buffer.Append(PackagingItem(string.Join(" ", currentBuffer)));
+                    buffer.Append(PackagingItem(string.Join(" ", itemBuffer)));
                     current = current.Next;
                 }
                 writer.Write(buffer.ToString().TrimEnd(Environment.NewLine.ToCharArray()));
@@ -88,10 +87,10 @@ namespace SaberInteractive
                 }
             }
 
-            return Parse(elementsGuidStringFields);
+            return ConvertStringToListNode(elementsGuidStringFields);
         }
 
-        private static List<ListNode> Parse(Dictionary<Guid, Dictionary<string, string>> elementsGuidStringFields)
+        private static List<ListNode> ConvertStringToListNode(Dictionary<Guid, Dictionary<string, string>> elementsGuidStringFields)
         {
             var result = new List<ListNode>();
             var elementsGuidListNode = new Dictionary<Guid, ListNode>();

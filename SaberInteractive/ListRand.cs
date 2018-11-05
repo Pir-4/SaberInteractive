@@ -71,10 +71,7 @@ namespace SaberInteractive
             return result;
         }
 
-        public bool IsEmpty
-        {
-            get { return Head == null; }
-        }
+        public bool IsEmpty => Head == null;
 
         public void Serialize(FileStream fileStream)
         {
