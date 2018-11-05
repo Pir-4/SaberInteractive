@@ -6,7 +6,7 @@ using System.Linq;
 using NUnit.Framework;
 using SaberInteractive;
 
-namespace UnitTestListRand
+namespace SaberInteractiveTest
 {
     [TestFixture]
     public class ListRandTests : TestBase

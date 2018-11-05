@@ -8,7 +8,7 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 using SaberInteractive;
 
-namespace UnitTestListRand
+namespace SaberInteractiveTest
 {
     [TestFixture()]
     public class SerializeTests : TestBase

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SaberInteractive;
 
-namespace UnitTestListRand
+namespace SaberInteractiveTest
 {
     public class TestBase
     {
